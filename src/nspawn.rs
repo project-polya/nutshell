@@ -6,7 +6,7 @@ pub fn nspawn_run<A : AsRef<OsStr>>(target_dir: A) -> Command {
     let mut command = Command::new("systemd-nspawn");
     command
         .arg("--quiet")
-        .arg("--bind-ro /etc/resolv.conf")
+        .arg("--bind-ro=/etc/resolv.conf")
         .arg("-D")
         .arg(target_dir.as_ref());
     command
