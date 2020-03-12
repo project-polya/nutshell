@@ -157,6 +157,7 @@ pub fn handle(mirror: &String, target_dir: &PathBuf, pacman_config: &Option<Path
                 .arg("-S")
                 .arg("--noconfirm")
                 .arg("base-devel")
+                .arg("base")
                 .spawn()
                 .map_err(|x| x.to_string())
                 .and_then(|mut x| x.wait()
