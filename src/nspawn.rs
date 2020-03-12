@@ -6,7 +6,6 @@ pub fn nspawn_run<A : AsRef<OsStr>>(target_dir: A) -> Command {
     let mut command = Command::new("systemd-nspawn");
     command
         .arg("--quiet")
-        .arg("--resolv-conf=bind-host")
         .arg("-D")
         .arg(target_dir.as_ref());
     command

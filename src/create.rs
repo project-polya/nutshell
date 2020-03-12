@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use log::*;
 use reqwest::blocking;
 
-use crate::nspawn::{nspawn_run, enter_shell};
+use crate::nspawn::{enter_shell, nspawn_run};
 
 pub fn download(mirror: &str, target_directory: &Path, backend: &str) {
     if backend == "pacstrap" {
@@ -117,6 +117,22 @@ pub fn handle(mirror: &String, target_dir: &PathBuf, pacman_config: &Option<Path
                 std::process::exit(1);
             });
     }
+
+    std::process::Command::new("cp")
+        .arg("-L")
+        .arg("/etc/resolv.conf")
+        .arg(format!("{}/root.x86_64/etc/resolv.conf", target_dir.display()))
+        .spawn()
+        .map_err(|x| x.to_string())
+        .and_then(|mut x| x.wait()
+            .map_err(|x| x.to_string())
+            .and_then(|e| {
+                if e.success() { Ok(()) } else { Err(String::from("failed cp -L")) }
+            }))
+        .unwrap_or_else(|x| {
+            error!("Error: {}, failed to link resolv", x);
+            std::process::exit(1);
+        });
 
     if download_backend != "pacstrap" {
         let key_init = nspawn_run(format!("{}/root.x86_64", target_dir.display()))
