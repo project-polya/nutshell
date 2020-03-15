@@ -2,7 +2,6 @@ use std::path::PathBuf;
 
 use log::*;
 use serde::*;
-use uuid::Uuid;
 
 use crate::nspawn::enter_shell;
 
@@ -15,10 +14,8 @@ struct MountResult {
 
 pub fn handle(mount_dir: &PathBuf, base_dir: &PathBuf, data_dir: &PathBuf, tmp_size: &Option<String>, print_result: bool, shell: bool) {
     crate::must_sudo();
-    let uuid = Uuid::new_v4();
-    info!("uuid generated: {}", uuid);
-    let upperdir = data_dir.join(format!("upperdir-{}", uuid));
-    let workdir = data_dir.join(format!("workdir-{}", uuid));
+    let upperdir = data_dir.join("upperdir");
+    let workdir = data_dir.join("workdir");
     let prepare = std::fs::create_dir_all(upperdir.as_path())
         .and_then(|_| std::fs::create_dir_all(workdir.as_path()))
         .map_err(|x| x.to_string());
