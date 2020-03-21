@@ -9,38 +9,42 @@ mod sqaushfs;
 enum Opt {
     #[structopt(about="create an arch chroot environment")]
     CreateRoot {
-        #[structopt(long, short, default_value="https://mirrors.kernel.org/archlinux/", about="image download mirror")]
+        #[structopt(long, short, default_value="https://mirrors.kernel.org/archlinux/", help="image download mirror")]
         mirror: String,
-        #[structopt(long, short, about="target directory to create the root")]
+        #[structopt(long, short, help="target directory to create the root")]
         target_dir: PathBuf,
-        #[structopt(long, short, about="pacman config file")]
+        #[structopt(long, short, help="pacman config file")]
         pacman_config: Option<PathBuf>,
-        #[structopt(long, short="l", about="pacman mirror list")]
+        #[structopt(long, short="l", help="pacman mirror list")]
         mirror_list: Option<PathBuf>,
-        #[structopt(long, short, about="download file", default_value="aria2c", possible_values=&["aria2c", "wget", "pacstrap"])]
+        #[structopt(long, short, help="downloader", default_value="aria2c", possible_values=&["aria2c", "wget", "pacstrap"])]
         download_backend: String,
-        #[structopt(long, short, about="enter the chroot environment after basic setups")]
+        #[structopt(long, short, help="enter the chroot environment after basic setups")]
         shell: bool
     },
     #[structopt(about="initialize an overlay file system")]
     InitOverlay {
-        #[structopt(long, short, about="the path to mount the merged root")]
+        #[structopt(long, short, help="the path to mount the merged root")]
         mount_dir: PathBuf,
-        #[structopt(long, short, about="the path to the lowerdir")]
+        #[structopt(long, short, help="the path to the lowerdir")]
         base_dir: PathBuf,
-        #[structopt(long, short, about="the path store workdir and upperdir")]
+        #[structopt(long, short, help="the path store workdir and upperdir")]
         data_dir: PathBuf,
-        #[structopt(long, short, about="create and bind a tmpfs with the given size")]
+        #[structopt(long, short, help="create and bind a tmpfs with the given size")]
         tmp_size: Option<String>,
-        #[structopt(long, short, about="print the result in json format")]
+        #[structopt(long, short, help="print the result in json format")]
         print_result: bool,
-        #[structopt(long, short, about="enter the chroot environment after mount")]
+        #[structopt(long, short, help="enter the chroot environment after mount")]
         shell: bool
     },
     #[structopt(about="create a squashfs")]
     MakeSquashfs {
+        #[structopt(long, short, help="source directory")]
         source: PathBuf,
-        target: PathBuf
+        #[structopt(long, short, help="target path")]
+        target: PathBuf,
+        #[structopt(long, short, help="make the process faster by disable high quality compression")]
+        faster: bool
     }
 }
 fn must_sudo() {
@@ -60,9 +64,9 @@ fn main() {
         Opt::InitOverlay { mount_dir, base_dir, data_dir, tmp_size, print_result, shell } => {
             overlay::handle(mount_dir, base_dir, data_dir, tmp_size, *print_result, *shell);
         },
-        Opt::MakeSquashfs { source, target } => {
+        Opt::MakeSquashfs { source, target , faster} => {
             must_sudo();
-            sqaushfs::handle(source.as_path(), target.as_path());
+            sqaushfs::handle(source.as_path(), target.as_path(), *faster);
         }
     }
 }
