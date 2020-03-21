@@ -106,3 +106,8 @@ This command is just a wrapper of `mksquashfs`. It will help to create a squashf
 in the Project Polya. 
 
 By default, it uses `-comp lz4 -Xhc` as the compression args. 
+
+## BTW, we use Arch Linux
+![arch logo](arch.png)
+We find that Arch Linux enjoy lots of up to date packages and a very lighweight design principle,
+which make it a very ideal Linux distro for Project Polya.
