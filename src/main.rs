@@ -4,6 +4,7 @@ use log::*;
 mod create;
 mod nspawn;
 mod overlay;
+mod sqaushfs;
 #[derive(StructOpt,Debug)]
 enum Opt {
     #[structopt(about="create an arch chroot environment")]
@@ -35,6 +36,11 @@ enum Opt {
         print_result: bool,
         #[structopt(long, short, about="enter the chroot environment after mount")]
         shell: bool
+    },
+    #[structopt(about="create a squashfs")]
+    MakeSquashfs {
+        source: PathBuf,
+        target: PathBuf
     }
 }
 fn must_sudo() {
@@ -53,6 +59,10 @@ fn main() {
         },
         Opt::InitOverlay { mount_dir, base_dir, data_dir, tmp_size, print_result, shell } => {
             overlay::handle(mount_dir, base_dir, data_dir, tmp_size, *print_result, *shell);
+        },
+        Opt::MakeSquashfs { source, target } => {
+            must_sudo();
+            sqaushfs::handle(source.as_path(), target.as_path());
         }
     }
 }
