@@ -1,8 +1,15 @@
 [package]
 name = "nutshell"
 version = "0.1.0"
-authors = ["SchrodingerZhu <i@zhuyi.fan>"]
+authors = ["schrodingerzhu <i@zhuyi.fan>"]
 edition = "2018"
+license = "MIT"
+description = "Image manager of Project Polya"
+keywords = ["Project Polya", "squashfs", "image", "systemd-nspawn", "archlinux"]
+categories = ["filesystem", "compression"]
+homepage = "https://github.com/project-polya"
+repository = "https://github.com/project-polya/nutshell"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
